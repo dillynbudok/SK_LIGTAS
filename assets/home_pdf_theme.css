@@ -1,0 +1,68 @@
+/* SK LIGTAS visual theme matched to the supplied PDF reference.
+   Visual-only overrides: no links, text, forms, data, or functionality are changed. */
+:root{
+  --ligtas-navy:#062b63;
+  --ligtas-blue:#0b3f8f;
+  --ligtas-red:#ed1119;
+  --ligtas-yellow:#ffc400;
+  --ligtas-gray:#9b9b9b;
+  --ligtas-line:#d8d8d8;
+}
+*{box-sizing:border-box}
+body{font-family:"Arial Narrow",Arial,sans-serif;background:#fff;color:var(--ligtas-navy)}
+.top-header{
+  position:relative;min-height:190px;padding:18px 4% 12px;display:grid;
+  grid-template-columns:minmax(310px,1fr) auto minmax(150px,220px);align-items:center;gap:18px;
+  background:#fff;color:var(--ligtas-navy);box-shadow:none;border:0;overflow:hidden;
+}
+.top-header:before{content:"";position:absolute;left:0;top:0;width:100%;height:7px;background:var(--ligtas-red);clip-path:polygon(0 0,34% 0,31% 100%,0 100%)}
+.top-header:after{content:"";position:absolute;right:0;top:0;width:100%;height:7px;background:var(--ligtas-navy);clip-path:polygon(65% 0,100% 0,100% 100%,68% 100%)}
+.top-header .brand{display:flex;align-items:center;gap:12px;min-width:0;z-index:1}
+.top-header .brand>.logo{width:310px;height:112px;display:grid;place-items:center;flex:0 0 310px;background:#fff;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.top-header .brand>.logo img{width:100%;height:100%;object-fit:contain;display:block;content:url("sk-ligtas-main-logo.png")}
+.top-header .brand h1{display:none}
+.top-header .brand p{display:none}
+.top-header .brand small{display:none}
+.top-header nav{display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;z-index:1}
+.top-header nav a{padding:7px 9px;border-radius:0;color:var(--ligtas-navy);font-size:10px;font-weight:800;border-bottom:2px solid transparent}
+.top-header nav a:hover,.top-header nav a.active{background:transparent;color:var(--ligtas-red);border-bottom-color:var(--ligtas-yellow)}
+.location-btn{z-index:1;justify-self:end;display:flex;align-items:center;gap:7px;background:var(--ligtas-red);color:#fff;border:2px solid var(--ligtas-yellow);border-radius:7px;padding:10px 15px;font-size:10px;font-weight:900;box-shadow:none}
+.location-btn:hover{transform:none;background:#cf0d14}
+main{width:100%;max-width:none;margin:0;padding:0;background:#fff}
+.hero{min-height:210px;width:100%;border-radius:0;padding:35px 6%;display:flex;align-items:flex-end;justify-content:space-between;gap:25px;background:#fff;color:var(--ligtas-navy);box-shadow:none;position:relative;overflow:hidden;border-bottom:1px solid var(--ligtas-line)}
+.hero:before{content:"";position:absolute;left:0;bottom:0;width:100%;height:8px;background:var(--ligtas-yellow);clip-path:polygon(0 100%,43% 100%,46% 0,0 0)}
+.hero:after{content:"";position:absolute;right:0;bottom:0;width:100%;height:8px;background:var(--ligtas-red);clip-path:polygon(59% 0,100% 0,100% 100%,55% 100%)}
+.hero-content{position:relative;z-index:1;margin-bottom:3px}
+.hero h2,.hero h3{font-family:"Arial Narrow",Impact,Arial,sans-serif;text-transform:none;line-height:.95;margin:0;font-weight:900}
+.hero h2{font-size:34px;color:var(--ligtas-navy);text-shadow:none}
+.hero h3{font-size:30px;color:var(--ligtas-red);margin-top:2px}
+.hero p{font-size:12px;color:var(--ligtas-navy);margin-top:7px}
+.sos-call{position:relative;z-index:1;background:var(--ligtas-red);color:#fff;border:2px solid var(--ligtas-yellow);border-radius:7px;padding:12px 17px;font-size:10px;font-weight:900;box-shadow:none}
+.sos-call:hover{transform:none;background:#cf0d14}
+.quick-grid{background:var(--ligtas-gray);width:100%;margin:0;padding:30px 6%;display:grid;grid-template-columns:repeat(3,minmax(150px,1fr));gap:9px;min-height:290px}
+.quick-card{min-height:92px;background:#fff;border:1px solid #d8d8d8;border-radius:7px;padding:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:3px;box-shadow:none;position:relative;overflow:hidden}
+.quick-card:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--ligtas-yellow)}
+.quick-card:hover{transform:none;box-shadow:none;border-color:#c5c5c5}
+.quick-card i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:16px;background:#fff!important;color:var(--ligtas-red)!important;border:2px solid var(--ligtas-red)}
+.quick-card strong{font-size:10px;color:var(--ligtas-navy);font-weight:900;text-transform:uppercase;line-height:1.05}
+.quick-card span{font-size:8px;color:#555;line-height:1.05}
+.quick-card.red i,.quick-card.blue i,.quick-card.green i,.quick-card.purple i,.quick-card.orange i,.quick-card.cyan i,.quick-card.pink i{background:#fff!important;color:var(--ligtas-red)!important}
+.dashboard-grid{background:#fff;padding:22px 6%;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel{background:#fff;border:1px solid #cfcfcf;border-radius:7px;overflow:hidden;box-shadow:none}
+.panel-title{min-height:44px;padding:10px 12px;border-bottom:3px solid var(--ligtas-red);display:flex;align-items:center;justify-content:space-between}
+.panel-title span{font-size:11px;font-weight:900;color:var(--ligtas-navy);text-transform:uppercase}
+.panel-title span i{color:var(--ligtas-red);margin-right:5px}
+.panel-title a{font-size:8px;color:var(--ligtas-red);font-weight:900}
+.tabs{padding:7px 10px 3px;border-bottom:1px solid #ddd}.tabs span{font-size:8px;color:#777;padding:5px 7px;border-radius:4px}.tabs .selected{background:#fff0f0;color:var(--ligtas-red)}
+.panel>h3{padding:10px 12px 2px;font-size:11px;color:var(--ligtas-navy)}.location{padding:0 12px 7px;font-size:8px;color:#777}.location i{color:var(--ligtas-red)}
+.contact-row,.hospital,.evacuation{border-top:1px solid #e7e7e7}.contact-row{padding:9px 12px}.contact-row b,.hospital-info b,.evacuation b{font-size:9px;color:var(--ligtas-navy)}.contact-row small,.hospital-info small,.evacuation small{font-size:8px;color:#777}.contact-row>a{width:25px;height:25px;background:var(--ligtas-red);color:#fff;font-size:10px}
+.view-button{margin:10px auto 12px;padding:6px 10px;border:1px solid var(--ligtas-navy);border-radius:4px;color:var(--ligtas-navy);font-size:8px}
+.hospital{padding:9px 12px}.hospital-icon{width:38px;height:38px;flex:0 0 38px;border-radius:5px;background:#fff;border:1px solid var(--ligtas-red);font-size:19px}.hospital>strong{font-size:9px;color:var(--ligtas-red)}
+.alert{margin:7px 9px;padding:9px 10px;border-radius:4px;background:#fff!important;border:1px solid #ddd;border-left:4px solid var(--ligtas-red)!important}.alert b{font-size:9px;color:var(--ligtas-navy)}.alert p{font-size:8px;color:#666}.alert small{font-size:7px;color:#888}
+.evacuation{padding:10px 55px 10px 12px}.open{right:10px;padding:3px 6px;background:#fff5c7;color:#8a6900;font-size:7px;border:1px solid var(--ligtas-yellow)}
+.call-panel{grid-column:1/-1}.call-grid{gap:7px;padding:10px}.call-grid a{padding:10px 6px;border:1px solid #ddd;border-radius:5px;background:#fff;color:var(--ligtas-navy);font-size:8px}.call-grid a b{color:var(--ligtas-red)}
+.report-banner{margin:15px 6%;background:#fff;border:1px solid #ccc;border-radius:7px;padding:15px 17px;box-shadow:none}.report-banner h2{font-size:13px;color:var(--ligtas-navy)}.report-banner p{font-size:8px;color:#777}.report-banner>a{background:var(--ligtas-red);border:2px solid var(--ligtas-yellow);border-radius:5px;padding:9px 12px;font-size:8px}
+footer{width:88%;margin:0 auto;padding:16px 0 22px;color:#777;font-size:8px;border-top:1px solid #ddd}
+@media(max-width:1100px){.top-header{grid-template-columns:1fr auto}.top-header nav{grid-column:1/-1;grid-row:2}.quick-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:850px){.top-header{grid-template-columns:1fr auto;min-height:150px}.top-header .brand>.logo{width:240px;height:88px;flex-basis:240px}.top-header nav{overflow-x:auto;justify-content:flex-start}.hero{padding:28px 5%;min-height:190px}.quick-grid{padding:22px 5%;grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr;padding:18px 5%}.call-panel{grid-column:auto}.report-banner{margin:13px 5%}}
+@media(max-width:560px){.top-header{padding:12px 10px;min-height:125px;display:flex;flex-wrap:wrap;justify-content:space-between}.top-header .brand{width:100%;justify-content:center}.top-header .brand>.logo{width:245px;height:82px;flex-basis:245px}.top-header nav{width:100%;order:3;justify-content:center;overflow-x:auto}.top-header nav a{font-size:8px;padding:5px 6px}.location-btn{position:absolute;right:10px;top:85px;font-size:8px;padding:7px 9px}.hero{min-height:185px;padding:24px 18px;align-items:flex-end}.hero h2{font-size:27px}.hero h3{font-size:24px}.hero p{font-size:9px}.sos-call{font-size:8px;padding:9px 10px}.quick-grid{padding:18px 10px;gap:7px}.quick-card{min-height:88px}.quick-card i{width:30px;height:30px;font-size:14px}.quick-card strong{font-size:8px}.quick-card span{font-size:7px}.dashboard-grid{padding:14px 10px}.call-grid{grid-template-columns:repeat(2,1fr)}footer{width:calc(100% - 20px)}}
