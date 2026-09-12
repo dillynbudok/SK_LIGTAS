@@ -1,215 +1,399 @@
 <?php
-function sk_http_get($url, $headers = []) {
-    $headers = array_merge([
-        'User-Agent: SK-LIGTAS/1.0 emergency-location-service'
-    ], $headers);
 
-    if (function_exists('curl_init')) {
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
-            CURLOPT_TIMEOUT => 20,
-            CURLOPT_HTTPHEADER => $headers,
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_SSL_VERIFYHOST => 2
+if (!function_exists('sk_http_get')) {
+
+    function sk_http_get($url, $timeout = 15)
+    {
+        if (function_exists('curl_init')) {
+
+            $ch = curl_init($url);
+
+            curl_setopt_array($ch, [
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_CONNECTTIMEOUT => 5,
+                CURLOPT_TIMEOUT => $timeout,
+                CURLOPT_USERAGENT => 'SK-LIGTAS/1.0 emergency-location-service',
+                CURLOPT_HTTPHEADER => [
+                    'Accept: application/json'
+                ]
+            ]);
+
+            $response = curl_exec($ch);
+            $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            curl_close($ch);
+
+            if ($response !== false && $httpCode >= 200 && $httpCode < 300) {
+                return $response;
+            }
+        }
+
+        $context = stream_context_create([
+            'http' => [
+                'method' => 'GET',
+                'timeout' => $timeout,
+                'header' =>
+                    "User-Agent: SK-LIGTAS/1.0 emergency-location-service\r\n" .
+                    "Accept: application/json\r\n"
+            ]
         ]);
-        $body = curl_exec($ch);
-        $status = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($body !== false && $status >= 200 && $status < 300) {
-            return $body;
+
+        $response = @file_get_contents($url, false, $context);
+
+        return $response !== false ? $response : null;
+    }
+}
+
+if (!function_exists('sk_clean_location_name')) {
+
+    function sk_clean_location_name($value)
+    {
+        $value = trim((string)$value);
+        $value = preg_replace('/\s+/', ' ', $value);
+
+        return trim($value);
+    }
+}
+
+if (!function_exists('sk_reverse_nominatim')) {
+
+    function sk_reverse_nominatim($latitude, $longitude)
+    {
+        $url = 'https://nominatim.openstreetmap.org/reverse?' .
+            http_build_query([
+                'lat' => $latitude,
+                'lon' => $longitude,
+                'format' => 'jsonv2',
+                'zoom' => 18,
+                'addressdetails' => 1,
+                'layer' => 'address',
+                'accept-language' => 'en'
+            ]);
+
+        $response = sk_http_get($url, 15);
+
+        if (!$response) {
+            return null;
         }
-    }
 
-    $context = stream_context_create([
-        'http' => [
-            'method' => 'GET',
-            'timeout' => 20,
-            'header' => implode("\r\n", $headers)
-        ]
-    ]);
+        $data = json_decode($response, true);
 
-    $body = @file_get_contents($url, false, $context);
-    return $body === false ? null : $body;
-}
-
-function sk_arcgis_point_query($serviceUrl, $latitude, $longitude, $where = '1=1', $fields = '*') {
-    $params = [
-        'where' => $where,
-        'geometry' => json_encode([
-            'x' => (float)$longitude,
-            'y' => (float)$latitude,
-            'spatialReference' => ['wkid' => 4326]
-        ], JSON_UNESCAPED_SLASHES),
-        'geometryType' => 'esriGeometryPoint',
-        'inSR' => '4326',
-        'spatialRel' => 'esriSpatialRelIntersects',
-        'outFields' => $fields,
-        'returnGeometry' => 'false',
-        'outSR' => '4326',
-        'f' => 'json'
-    ];
-
-    $url = $serviceUrl . '?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986);
-    $raw = sk_http_get($url);
-
-    if (!$raw) {
-        return null;
-    }
-
-    $data = json_decode($raw, true);
-    if (!is_array($data) || !empty($data['error'])) {
-        return null;
-    }
-
-    return $data;
-}
-
-function sk_is_santa_cruz($attrs) {
-    $cityCode = trim((string)($attrs['city_code'] ?? ''));
-    $cityName = strtolower(trim((string)($attrs['city_name'] ?? '')));
-    $province = strtolower(trim((string)($attrs['prov_name'] ?? '')));
-
-    return $cityCode === '0102924000' || (
-        $cityName === 'santa cruz' &&
-        ($province === 'ilocos sur' || $province === 'ilocos sur province')
-    );
-}
-
-function sk_nominatim_location($latitude, $longitude) {
-    $url = 'https://nominatim.openstreetmap.org/reverse?format=jsonv2' .
-        '&lat=' . rawurlencode((string)$latitude) .
-        '&lon=' . rawurlencode((string)$longitude) .
-        '&zoom=18&addressdetails=1';
-
-    $raw = sk_http_get($url, [
-        'Accept: application/json',
-        'Accept-Language: en'
-    ]);
-
-    if (!$raw) {
-        return null;
-    }
-
-    $data = json_decode($raw, true);
-    return is_array($data) ? $data : null;
-}
-
-function sk_resolve_location($latitude, $longitude) {
-    if (!is_numeric($latitude) || !is_numeric($longitude)) {
-        return ['success' => false, 'inside' => false, 'message' => 'Invalid GPS coordinates.'];
-    }
-
-    $lat = (float)$latitude;
-    $lon = (float)$longitude;
-
-    if ($lat < -90 || $lat > 90 || $lon < -180 || $lon > 180) {
-        return ['success' => false, 'inside' => false, 'message' => 'Invalid GPS coordinates.'];
-    }
-
-    $municipal = sk_arcgis_point_query(
-        'https://ulap-nga.georisk.gov.ph/arcgis/rest/services/PSA/Municipal/MapServer/0',
-        $lat,
-        $lon,
-        "city_code='0102924000'",
-        'city_name,prov_name,city_code,psgc_10d'
-    );
-
-    $municipalFeature = $municipal['features'][0] ?? null;
-    $municipalAttrs = $municipalFeature['attributes'] ?? null;
-    $municipalConfirmed = is_array($municipalAttrs) && sk_is_santa_cruz($municipalAttrs);
-
-    $barangay = sk_arcgis_point_query(
-        'https://ulap-nga.georisk.gov.ph/arcgis/rest/services/PSA/BarangayPopMF/MapServer/0',
-        $lat,
-        $lon,
-        '1=1',
-        'brgy_name,brgy_code,psgc_10d,city_name,prov_name,city_code'
-    );
-
-    $barangayAttrs = null;
-    foreach (($barangay['features'] ?? []) as $feature) {
-        $attrs = $feature['attributes'] ?? [];
-        if (sk_is_santa_cruz($attrs)) {
-            $barangayAttrs = $attrs;
-            break;
+        if (!is_array($data)) {
+            return null;
         }
+
+        return $data;
     }
+}
 
-    if (!$municipalConfirmed && !$barangayAttrs) {
-        $nominatim = sk_nominatim_location($lat, $lon);
-        $address = $nominatim['address'] ?? [];
-        $fallbackCity = strtolower(trim((string)($address['municipality'] ?? $address['town'] ?? $address['city'] ?? '')));
-        $fallbackProvince = strtolower(trim((string)($address['state'] ?? $address['province'] ?? '')));
+if (!function_exists('sk_get_barangay')) {
 
-        if ($fallbackCity === 'santa cruz' && ($fallbackProvince === 'ilocos sur' || $fallbackProvince === 'ilocos sur province')) {
-            $road = trim((string)($address['road'] ?? ''));
+    function sk_get_barangay($address)
+    {
+        $possible = [
+            $address['barangay'] ?? '',
+            $address['suburb'] ?? '',
+            $address['neighbourhood'] ?? '',
+            $address['quarter'] ?? '',
+            $address['village'] ?? ''
+        ];
+
+        foreach ($possible as $value) {
+
+            $value = sk_clean_location_name($value);
+
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('sk_get_municipality')) {
+
+    function sk_get_municipality($address)
+    {
+        $possible = [
+            $address['municipality'] ?? '',
+            $address['town'] ?? '',
+            $address['city'] ?? '',
+            $address['city_district'] ?? ''
+        ];
+
+        foreach ($possible as $value) {
+
+            $value = sk_clean_location_name($value);
+
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('sk_get_province')) {
+
+    function sk_get_province($address)
+    {
+        $possible = [
+            $address['province'] ?? '',
+            $address['state'] ?? ''
+        ];
+
+        foreach ($possible as $value) {
+
+            $value = sk_clean_location_name($value);
+
+            if ($value !== '') {
+                return $value;
+            }
+        }
+
+        return '';
+    }
+}
+
+if (!function_exists('sk_is_santa_cruz_ilocos_sur')) {
+
+    function sk_is_santa_cruz_ilocos_sur($address, $displayName = '')
+    {
+        $values = [
+            $address['municipality'] ?? '',
+            $address['town'] ?? '',
+            $address['city'] ?? '',
+            $address['county'] ?? '',
+            $address['state_district'] ?? '',
+            $address['province'] ?? '',
+            $address['state'] ?? '',
+            $displayName
+        ];
+
+        $text = strtolower(
+            sk_clean_location_name(
+                implode(' ', $values)
+            )
+        );
+
+        $hasSantaCruz =
+            strpos($text, 'santa cruz') !== false;
+
+        $hasIlocosSur =
+            strpos($text, 'ilocos sur') !== false;
+
+        return $hasSantaCruz && $hasIlocosSur;
+    }
+}
+
+if (!function_exists('sk_build_exact_address')) {
+
+    function sk_build_exact_address($address)
+    {
+        $houseNumber = sk_clean_location_name(
+            $address['house_number'] ?? ''
+        );
+
+        $road = sk_clean_location_name(
+            $address['road']
+            ?? $address['street']
+            ?? ''
+        );
+
+        $barangay = sk_get_barangay($address);
+
+        if ($houseNumber !== '' && $road !== '') {
+
+            $streetAddress =
+                $houseNumber . ' ' . $road;
+
+        } elseif ($road !== '') {
+
+            $streetAddress = $road;
+
+        } elseif ($houseNumber !== '') {
+
+            $streetAddress = $houseNumber;
+
+        } else {
+
+            $streetAddress = '';
+        }
+
+        $parts = [];
+
+        if ($streetAddress !== '') {
+            $parts[] = $streetAddress;
+        }
+
+        if ($barangay !== '') {
+            $parts[] = $barangay;
+        }
+
+        $parts[] = 'Santa Cruz';
+        $parts[] = 'Ilocos Sur';
+
+        return [
+            'address' => implode(', ', $parts),
+            'house_number' => $houseNumber,
+            'road' => $road,
+            'barangay' => $barangay
+        ];
+    }
+}
+
+if (!function_exists('sk_resolve_location')) {
+
+    function sk_resolve_location($latitude, $longitude)
+    {
+        $latitude = (float)$latitude;
+        $longitude = (float)$longitude;
+
+        if (
+            $latitude < -90 ||
+            $latitude > 90 ||
+            $longitude < -180 ||
+            $longitude > 180
+        ) {
+            return [
+                'success' => false,
+                'inside' => false,
+                'address' => '',
+                'message' => 'Invalid GPS coordinates.'
+            ];
+        }
+
+        $reverse = sk_reverse_nominatim(
+            $latitude,
+            $longitude
+        );
+
+        if (!is_array($reverse)) {
+
+            return [
+                'success' => false,
+                'inside' => false,
+                'address' => '',
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'message' =>
+                    'Unable to contact the address service. Please try GPS again.'
+            ];
+        }
+
+        $addressData = $reverse['address'] ?? [];
+
+        if (!is_array($addressData)) {
+            $addressData = [];
+        }
+
+        $displayName = sk_clean_location_name(
+            $reverse['display_name'] ?? ''
+        );
+
+        $municipality = sk_get_municipality(
+            $addressData
+        );
+
+        $province = sk_get_province(
+            $addressData
+        );
+
+        $barangay = sk_get_barangay(
+            $addressData
+        );
+
+        $inside = false;
+
+        if (
+            stripos($displayName, 'Santa Cruz') !== false &&
+            stripos($displayName, 'Ilocos Sur') !== false
+        ) {
+            $inside = true;
+        }
+
+        if (
+            stripos($municipality, 'Santa Cruz') !== false &&
+            stripos($province, 'Ilocos Sur') !== false
+        ) {
+            $inside = true;
+        }
+
+        if (!$inside) {
+
+            $combined = strtolower(
+                sk_clean_location_name(
+                    json_encode(
+                        $reverse,
+                        JSON_UNESCAPED_UNICODE
+                    )
+                )
+            );
+
+            if (
+                strpos($combined, 'santa cruz') !== false &&
+                strpos($combined, 'ilocos sur') !== false
+            ) {
+                $inside = true;
+            }
+        }
+
+        if (!$inside) {
+
             return [
                 'success' => true,
+                'inside' => false,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'address' => $displayName,
+                'barangay' => $barangay,
+                'municipality' => $municipality,
+                'province' => $province,
+                'message' =>
+                    'The GPS location is outside Santa Cruz, Ilocos Sur.'
+            ];
+        }
+
+        $exact = sk_build_exact_address(
+            $addressData
+        );
+
+        $finalAddress = $exact['address'];
+
+        if ($exact['road'] === '' && $exact['house_number'] === '') {
+
+            return [
+                'success' => false,
                 'inside' => true,
-                'barangay' => '',
-                'barangay_code' => '',
-                'psgc_10d' => '0102924000',
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+                'address' => '',
+                'barangay' => $barangay,
+                'road' => '',
+                'house_number' => '',
                 'municipality' => 'Santa Cruz',
                 'province' => 'Ilocos Sur',
-                'address' => $road !== '' ? $road . ', Santa Cruz, Ilocos Sur' : 'Santa Cruz, Ilocos Sur',
-                'latitude' => $lat,
-                'longitude' => $lon
+                'message' =>
+                    'Your location is inside Santa Cruz, but the exact street or house number could not be determined. Please enter your street or house number manually.'
             ];
         }
 
         return [
             'success' => true,
-            'inside' => false,
-            'message' => 'Your GPS location is outside the SK LIGTAS service area of Santa Cruz, Ilocos Sur.'
-        ];
-    }
-
-    if ($barangayAttrs) {
-        $barangayName = trim((string)($barangayAttrs['brgy_name'] ?? ''));
-        $municipality = trim((string)($barangayAttrs['city_name'] ?? 'Santa Cruz'));
-        $province = trim((string)($barangayAttrs['prov_name'] ?? 'Ilocos Sur'));
-
-        $nominatim = sk_nominatim_location($lat, $lon);
-        $road = trim((string)($nominatim['address']['road'] ?? ''));
-
-        $parts = [];
-        if ($road !== '') {
-            $parts[] = $road;
-        }
-        if ($barangayName !== '') {
-            $parts[] = $barangayName;
-        }
-        $parts[] = $municipality;
-        $parts[] = $province;
-
-        return [
-            'success' => true,
             'inside' => true,
-            'barangay' => $barangayName,
-            'barangay_code' => (string)($barangayAttrs['brgy_code'] ?? ''),
-            'psgc_10d' => (string)($barangayAttrs['psgc_10d'] ?? ''),
-            'municipality' => $municipality,
-            'province' => $province,
-            'address' => implode(', ', $parts),
-            'latitude' => $lat,
-            'longitude' => $lon
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'address' => $finalAddress,
+            'barangay' => $exact['barangay'],
+            'road' => $exact['road'],
+            'house_number' => $exact['house_number'],
+            'municipality' => 'Santa Cruz',
+            'province' => 'Ilocos Sur',
+            'message' =>
+                'Location verified inside Santa Cruz, Ilocos Sur.'
         ];
     }
-
-    return [
-        'success' => true,
-        'inside' => true,
-        'barangay' => '',
-        'barangay_code' => '',
-        'psgc_10d' => '0102924000',
-        'municipality' => 'Santa Cruz',
-        'province' => 'Ilocos Sur',
-        'address' => 'Santa Cruz, Ilocos Sur',
-        'latitude' => $lat,
-        'longitude' => $lon,
-        'message' => 'Santa Cruz was verified, but the exact barangay could not be determined.'
-    ];
 }

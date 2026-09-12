@@ -16,24 +16,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $longitude = $_POST['longitude'] ?? null;
 
     $latitude = is_numeric($latitude) && $latitude >= -90 && $latitude <= 90
-        ? (float)$latitude : null;
+        ? (float)$latitude
+        : null;
+
     $longitude = is_numeric($longitude) && $longitude >= -180 && $longitude <= 180
-        ? (float)$longitude : null;
+        ? (float)$longitude
+        : null;
 
     if ($category === '' || $phone === '' || $description === '') {
         $error = 'Please complete the required fields.';
     } elseif ($latitude !== null && $longitude !== null) {
         require_once __DIR__ . '/../api/location_service.php';
+
         $verify = sk_resolve_location($latitude, $longitude);
 
         if (!is_array($verify) || empty($verify['success']) || empty($verify['inside'])) {
-            $error = $verify['message'] ?? 'The GPS location could not be verified as inside Santa Cruz, Ilocos Sur.';
+            $error = $verify['message']
+                ?? 'The GPS location could not be verified as inside Santa Cruz, Ilocos Sur.';
         } else {
             $location = trim((string)($verify['address'] ?? $location));
         }
     }
 
-    // Save the report only after validation and, when supplied, GPS verification.
     if ($error === '') {
         $stmt = $conn->prepare(
             'INSERT INTO reports
@@ -71,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
@@ -116,222 +119,140 @@ body {
     position: sticky;
     top: 0;
     z-index: 1000;
-
     width: 100%;
-
-    background: #ffffff;
-
-    border-bottom: 1px solid var(--sk-border);
-
-    box-shadow:
-        0 3px 14px rgba(10,35,70,.08);
+    background: linear-gradient(
+        110deg,
+        #062b69 0 70%,
+        #0b4fae 70% 100%
+    ) !important;
+    color: #fff !important;
+    border-bottom: 4px solid #f4c21f !important;
+    min-height: 72px;
+    padding: 0 28px !important;
 }
 
-.report-header-inner {
-    width: 92%;
-    max-width: 1100px;
-
-    min-height: 70px;
-
-    margin: auto;
-
-    display: flex;
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-}
-
-.report-brand {
+.report-header .brand {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.report-logo {
-    width: 48px;
-    height: 48px;
+.report-header .brand strong,
+.report-header .brand span {
+    color: #fff !important;
+}
 
+.report-header .back-link {
+    color: #fff !important;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 10px;
     display: grid;
     place-items: center;
-
-    overflow: hidden;
-
-    border-radius: 13px;
-
-    background: #ffffff;
-
-    box-shadow:
-        0 3px 10px rgba(10,35,70,.12);
+    background: rgba(255,255,255,.08);
+    margin-right: 4px;
+    text-decoration: none;
 }
 
-.report-logo img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-
-    display: block;
-}
-
-.report-brand-text {
+.report-header .shield {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
     display: flex;
-    flex-direction: column;
-}
-
-.report-brand-text strong {
-    color: var(--sk-dark-blue);
-
-    font-size: 19px;
-
-    line-height: 1.1;
-
-    font-weight: 900;
-}
-
-.report-brand-text span {
-    margin-top: 3px;
-
-    color: #657185;
-
-    font-size: 11px;
-}
-
-.report-brand-text small {
-    margin-top: 3px;
-
-    color: #8993a3;
-
-    font-size: 10px;
-}
-
-.report-back {
-    margin-left: auto;
-
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-
-    padding: 9px 14px;
-
-    background: var(--sk-light-blue);
-    color: var(--sk-blue);
-
-    border: 1px solid #cbdcf5;
-    border-radius: 9px;
-
-    text-decoration: none;
-
-    font-size: 12px;
-    font-weight: 800;
-
-    transition: .2s ease;
+    background: #fff !important;
+    border-radius: 10px !important;
+    overflow: hidden;
 }
 
-.report-back:hover {
-    background: var(--sk-blue);
-    color: #ffffff;
+.report-header .shield img {
+    display: block;
+    width: 38px;
+    height: 38px;
+    max-width: 38px;
+    max-height: 38px;
+    object-fit: contain;
+}
+
+.report-header .report-back {
+    margin-left: 0 !important;
+    padding: 0 !important;
+    background: rgba(255,255,255,.08) !important;
+    border: 1px solid rgba(255,255,255,.35) !important;
+}
+
+.report-header .report-back:hover {
+    background: rgba(255,255,255,.2) !important;
 }
 
 .report-main {
     width: min(900px, 92%);
-
     margin: 30px auto 50px;
 }
 
 .report-page-card {
-    background: #ffffff;
-
+    background: #fff;
     border: 1px solid var(--sk-border);
-
     border-radius: 18px;
-
     overflow: hidden;
-
-    box-shadow:
-        0 7px 24px rgba(19,50,90,.08);
+    box-shadow: 0 7px 24px rgba(19,50,90,.08);
 }
 
 .report-card-top {
     position: relative;
-
     padding: 28px 30px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--sk-dark-blue),
-            var(--sk-blue)
-        );
-
-    color: #ffffff;
-
+    background: linear-gradient(
+        135deg,
+        var(--sk-dark-blue),
+        var(--sk-blue)
+    );
+    color: #fff;
     border-bottom: 4px solid var(--sk-yellow);
-
     overflow: hidden;
 }
 
 .report-card-top::after {
     content: "";
-
     position: absolute;
-
     right: -80px;
     bottom: -100px;
-
     width: 260px;
     height: 260px;
-
     border-radius: 50%;
-
     border: 45px solid rgba(255,255,255,.06);
 }
 
 .report-icon {
     position: relative;
     z-index: 2;
-
     width: 52px;
     height: 52px;
-
     display: grid;
     place-items: center;
-
     margin-bottom: 13px;
-
     border-radius: 14px;
-
     background: var(--sk-red);
-
     border: 3px solid var(--sk-yellow);
-
     font-size: 24px;
 }
 
 .report-card-top h1 {
     position: relative;
     z-index: 2;
-
     margin: 0;
-
-    color: #ffffff;
-
+    color: #fff;
     font-size: 30px;
-
     font-weight: 900;
 }
 
 .report-card-top p {
     position: relative;
     z-index: 2;
-
     margin: 7px 0 0;
-
     color: rgba(255,255,255,.9);
-
     font-size: 13px;
-
     line-height: 1.5;
 }
 
@@ -341,231 +262,181 @@ body {
 
 .report-success {
     padding: 13px 15px;
-
     margin-bottom: 18px;
-
     background: #eaf8ef;
-
     border: 1px solid #c9ead6;
-
     border-left: 5px solid #19a366;
-
     border-radius: 10px;
-
     color: #176b35;
-
     font-size: 13px;
-
     font-weight: 700;
 }
 
 .report-error {
     padding: 13px 15px;
-
     margin-bottom: 18px;
-
     background: #ffe9ec;
-
     border: 1px solid #ffd0d5;
-
     border-left: 5px solid var(--sk-red);
-
     border-radius: 10px;
-
     color: #b42331;
-
     font-size: 13px;
-
     font-weight: 700;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    min-width: 0;
 }
 
 .report-form label {
     display: block;
-
     margin: 17px 0 7px;
-
     color: #12315d;
-
     font-size: 12px;
-
     font-weight: 800;
+}
+
+.form-row .form-group label {
+    margin-top: 0;
 }
 
 .report-form input,
 .report-form select,
 .report-form textarea {
     width: 100%;
-
     padding: 12px 13px;
-
     background: #fbfcfe;
-
     border: 1px solid #d5dfeb;
-
     border-radius: 10px;
-
     color: var(--sk-text);
-
     font-family: inherit;
-
     font-size: 13px;
-
     outline: none;
-
     transition: .2s;
 }
 
 .report-form input:focus,
 .report-form select:focus,
 .report-form textarea:focus {
-    background: #ffffff;
-
+    background: #fff;
     border-color: var(--sk-blue);
-
-    box-shadow:
-        0 0 0 3px rgba(7,84,199,.10);
+    box-shadow: 0 0 0 3px rgba(7,84,199,.10);
 }
 
 .report-form textarea {
     min-height: 140px;
-
     resize: vertical;
 }
 
 .location-row {
     display: flex;
-
     gap: 9px;
 }
 
 .location-row input {
     flex: 1;
+    min-width: 0;
 }
 
 .gps-button {
-    padding: 0 16px;
-
+    min-height: 46px;
+    padding: 0 18px;
     border: none;
-
     border-radius: 10px;
-
     background: var(--sk-blue);
-
-    color: #ffffff;
-
+    color: #fff;
     font-size: 12px;
-
     font-weight: 800;
-
     cursor: pointer;
-
     white-space: nowrap;
-
     transition: .2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .gps-button:hover {
     background: var(--sk-dark-blue);
 }
 
+.gps-button:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
+.gps-status {
+    margin-top: 7px;
+    color: #667085;
+    font-size: 11px;
+}
+
 .submit-report {
     width: 100%;
-
     margin-top: 22px;
-
     padding: 14px 18px;
-
     background: var(--sk-red);
-
-    color: #ffffff;
-
+    color: #fff;
     border: 3px solid var(--sk-yellow);
-
     border-radius: 12px;
-
     font-size: 13px;
-
     font-weight: 900;
-
     cursor: pointer;
-
     transition: .2s;
 }
 
 .submit-report:hover {
     background: #c91420;
-
     transform: translateY(-2px);
 }
 
 .call-box {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 15px;
-
     margin-top: 16px;
-
     padding: 18px 20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--sk-dark-blue),
-            var(--sk-blue)
-        );
-
+    background: linear-gradient(
+        135deg,
+        var(--sk-dark-blue),
+        var(--sk-blue)
+    );
     border-top: 4px solid var(--sk-yellow);
-
     border-radius: 16px;
-
-    color: #ffffff;
-
-    box-shadow:
-        0 7px 20px rgba(19,50,90,.10);
+    color: #fff;
+    box-shadow: 0 7px 20px rgba(19,50,90,.10);
 }
 
 .call-box b {
     display: block;
-
     font-size: 14px;
 }
 
 .call-box small {
     display: block;
-
     margin-top: 4px;
-
     color: rgba(255,255,255,.8);
-
     font-size: 10px;
 }
 
 .call-box a {
     display: inline-flex;
-
     align-items: center;
     justify-content: center;
-
     padding: 11px 17px;
-
     background: var(--sk-red);
-
-    color: #ffffff;
-
+    color: #fff;
     border: 2px solid var(--sk-yellow);
-
     border-radius: 10px;
-
     text-decoration: none;
-
     font-size: 12px;
-
     font-weight: 900;
-
     white-space: nowrap;
 }
 
@@ -575,35 +446,29 @@ body {
 
 @media (max-width: 600px) {
 
-    .report-header-inner {
-        width: 94%;
+    .report-header {
+        padding: 0 16px !important;
+    }
+
+    .report-header .shield {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+    }
+
+    .report-header .shield img {
+        width: 34px;
+        height: 34px;
+        max-width: 34px;
+        max-height: 34px;
     }
 
     .report-brand-text span {
         display: none;
     }
 
-    .report-brand-text strong {
-        font-size: 17px;
-    }
-
-    .report-brand-text small {
-        font-size: 9px;
-    }
-
-    .report-logo {
-        width: 43px;
-        height: 43px;
-    }
-
-    .report-back {
-        padding: 8px 11px;
-        font-size: 11px;
-    }
-
     .report-main {
         width: 94%;
-
         margin-top: 20px;
     }
 
@@ -619,17 +484,25 @@ body {
         padding: 20px;
     }
 
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
     .location-row {
         flex-direction: column;
+        gap: 10px;
     }
 
     .gps-button {
-        padding: 11px;
+        width: 100%;
+        min-height: 46px;
+        padding: 12px 16px;
+        font-size: 13px;
     }
 
     .call-box {
         flex-direction: column;
-
         align-items: stretch;
     }
 
@@ -638,13 +511,6 @@ body {
     }
 }
 
-.report-header{background:linear-gradient(110deg,#062b69 0 70%,#0b4fae 70% 100%)!important;color:#fff!important;border-bottom:4px solid #f4c21f!important;min-height:72px;padding:0 28px!important}
-.report-header .brand{display:flex;align-items:center;gap:12px}
-.report-header .brand strong,.report-header .brand span{color:#fff!important}
-.report-header .back-link{color:#fff!important;width:38px;height:38px;border:1px solid rgba(255,255,255,.35);border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.08);margin-right:4px}
-.report-header .shield{background:#fff!important;border-radius:10px!important}
-.report-header .report-back{margin-left:0!important;padding:0!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.35)!important}
-.report-header .report-back:hover{background:rgba(255,255,255,.2)!important}
 </style>
 
 </head>
@@ -652,323 +518,680 @@ body {
 <body>
 
 <header class="header report-header">
+
     <div class="brand">
-        <a href="../index.php" class="back-link report-back" aria-label="Back to home">←</a>
-        <div class="shield"><img src="../asset/sk-logo.png" alt="SK LIGTAS Logo"></div>
-        <div>
-            <strong>SK LIGTAS</strong>
-            <span>Report Emergency</span>
+
+        <a
+            href="../index.php"
+            class="back-link report-back"
+            aria-label="Back to home"
+        >
+            ←
+        </a>
+
+        <div class="shield">
+
+            <img
+                src="../asset/sk-logo.png"
+                alt="SK LIGTAS Logo"
+            >
+
         </div>
+
+        <div class="report-brand-text">
+
+            <strong>SK LIGTAS</strong>
+
+            <span>Report Emergency</span>
+
+        </div>
+
     </div>
+
 </header>
 
 <main class="report-main">
 
-    <section class="report-page-card">
+<section class="report-page-card">
 
-        <div class="report-card-top">
+<div class="report-card-top">
 
-            <div class="report-icon">
-                🚨
-            </div>
+    <div class="report-icon">
+        🚨
+    </div>
 
-            <h1>
-                Report an Emergency
-            </h1>
+    <h1>
+        Report an Emergency
+    </h1>
 
-            <p>
-                Send your emergency details to authorized responders.
-            </p>
+    <p>
+        Send your emergency details to authorized responders.
+    </p>
 
-        </div>
+</div>
 
-        <div class="report-form">
+<div class="report-form">
 
-            <?php if ($sent): ?>
+<?php if ($sent): ?>
 
-                <div class="report-success">
-                    ✓ Report submitted successfully.
-                </div>
+<div class="report-success">
+    ✓ Report submitted successfully.
+</div>
 
-            <?php endif; ?>
+<?php endif; ?>
 
-            <?php if ($error): ?>
+<?php if ($error): ?>
 
-                <div class="report-error">
-                    ⚠ <?= htmlspecialchars($error) ?>
-                </div>
+<div class="report-error">
+    ⚠ <?= htmlspecialchars($error) ?>
+</div>
 
-            <?php endif; ?>
+<?php endif; ?>
 
-            <form
-                method="POST"
-                action="reports.php"
+<form
+    method="POST"
+    action="reports.php"
+>
+
+<div class="form-row">
+
+    <div class="form-group">
+
+        <label>
+            Emergency Category *
+        </label>
+
+        <select
+            name="category"
+            required
+        >
+
+            <option value="">
+                Select category
+            </option>
+
+            <option
+                value="Medical Emergency"
+                <?= $selectedCategory === 'Medical Emergency' ? 'selected' : '' ?>
             >
+                Medical Emergency
+            </option>
 
-                <label>
-                    Emergency Category *
-                </label>
+            <option
+                value="Fire"
+                <?= $selectedCategory === 'Fire' ? 'selected' : '' ?>
+            >
+                Fire
+            </option>
 
-                <select
-                    name="category"
-                    required
-                >
+            <option
+                value="Police"
+                <?= $selectedCategory === 'Police' ? 'selected' : '' ?>
+            >
+                Police
+            </option>
 
-                    <option value="">
-                        Select category
-                    </option>
+            <option
+                value="Rescue"
+                <?= $selectedCategory === 'Rescue' ? 'selected' : '' ?>
+            >
+                Rescue
+            </option>
 
-                    <option
-                        value="Medical Emergency"
-                        <?= $selectedCategory === 'Medical Emergency' ? 'selected' : '' ?>
-                    >
-                        Medical Emergency
-                    </option>
+            <option
+                value="Accident"
+                <?= $selectedCategory === 'Accident' ? 'selected' : '' ?>
+            >
+                Accident
+            </option>
 
-                    <option
-                        value="Fire"
-                        <?= $selectedCategory === 'Fire' ? 'selected' : '' ?>
-                    >
-                        Fire
-                    </option>
+            <option
+                value="Flood / Disaster"
+                <?= $selectedCategory === 'Flood / Disaster' ? 'selected' : '' ?>
+            >
+                Flood / Disaster
+            </option>
 
-                    <option
-                        value="Police"
-                        <?= $selectedCategory === 'Police' ? 'selected' : '' ?>
-                    >
-                        Police
-                    </option>
+            <option
+                value="Other Emergency"
+                <?= $selectedCategory === 'Other Emergency' ? 'selected' : '' ?>
+            >
+                Other Emergency
+            </option>
 
-                    <option
-                        value="Rescue"
-                        <?= $selectedCategory === 'Rescue' ? 'selected' : '' ?>
-                    >
-                        Rescue
-                    </option>
+            <option
+                value="Community Concern"
+                <?= $selectedCategory === 'Community Concern' ? 'selected' : '' ?>
+            >
+                Community Concern
+            </option>
 
-                    <option
-                        value="Accident"
-                        <?= $selectedCategory === 'Accident' ? 'selected' : '' ?>
-                    >
-                        Accident
-                    </option>
-
-                    <option
-                        value="Flood / Disaster"
-                        <?= $selectedCategory === 'Flood / Disaster' ? 'selected' : '' ?>
-                    >
-                        Flood / Disaster
-                    </option>
-
-                    <option
-                        value="Other Emergency"
-                        <?= $selectedCategory === 'Other Emergency' ? 'selected' : '' ?>
-                    >
-                        Other Emergency
-                    </option>
-
-                    <option
-                        value="Community Concern"
-                        <?= $selectedCategory === 'Community Concern' ? 'selected' : '' ?>
-                    >
-                        Community Concern
-                    </option>
-
-                </select>
-
-                <label>
-                    Name
-                </label>
-
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Your name (optional)"
-                    value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
-                >
-
-                <label>
-                    Contact Number *
-                </label>
-
-                <input
-                    type="tel"
-                    name="contact"
-                    placeholder="09XXXXXXXXX"
-                    required
-                    value="<?= htmlspecialchars($_POST['contact'] ?? '') ?>"
-                >
-
-                <label>
-                    Location
-                </label>
-
-                <div class="location-row">
-
-                    <input
-                        type="text"
-                        name="location"
-                        id="reportLocation"
-                        placeholder="Enter location"
-                        value="<?= htmlspecialchars($_POST['location'] ?? '') ?>"
-                    >
-
-                    <button
-                        type="button"
-                        class="gps-button"
-                        onclick="getLocation()"
-                    >
-                        📍 GPS
-                    </button>
-
-                </div>
-
-                <input
-                    type="hidden"
-                    name="latitude"
-                    id="latitude"
-                    value="<?= htmlspecialchars($_POST['latitude'] ?? '') ?>"
-                >
-
-                <input
-                    type="hidden"
-                    name="longitude"
-                    id="longitude"
-                    value="<?= htmlspecialchars($_POST['longitude'] ?? '') ?>"
-                >
-
-                <label>
-                    Description *
-                </label>
-
-                <textarea
-                    name="description"
-                    placeholder="Describe what happened..."
-                    required
-                ><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
-
-                <button
-                    type="submit"
-                    class="submit-report"
-                >
-                    SUBMIT EMERGENCY REPORT
-                </button>
-
-            </form>
-
-        </div>
-
-    </section>
-
-    <div class="call-box">
-
-        <div>
-
-            <b>
-                Immediate danger?
-            </b>
-
-            <small>
-                For life-threatening emergencies, call 911.
-            </small>
-
-        </div>
-
-        <a href="tel:911">
-            ☎ Call 911
-        </a>
+        </select>
 
     </div>
+
+    <div class="form-group">
+
+        <label>
+            Name
+        </label>
+
+        <input
+            type="text"
+            name="name"
+            placeholder="Your name (optional)"
+            value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
+        >
+
+    </div>
+
+</div>
+
+<div class="form-row">
+
+    <div class="form-group">
+
+        <label>
+            Contact Number *
+        </label>
+
+        <input
+            type="tel"
+            name="contact"
+            placeholder="09XXXXXXXXX"
+            required
+            value="<?= htmlspecialchars($_POST['contact'] ?? '') ?>"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>
+            Location
+        </label>
+
+        <div class="location-row">
+
+            <input
+                type="text"
+                name="location"
+                id="reportLocation"
+                placeholder="Street / House Number, Barangay, Santa Cruz, Ilocos Sur"
+                value="<?= htmlspecialchars($_POST['location'] ?? '') ?>"
+            >
+
+            <button
+                type="button"
+                class="gps-button"
+                id="gpsButton"
+                onclick="getLocation()"
+            >
+                📍 GPS
+            </button>
+
+        </div>
+
+        <div
+            class="gps-status"
+            id="gpsStatus"
+        ></div>
+
+    </div>
+
+</div>
+
+<input
+    type="hidden"
+    name="latitude"
+    id="latitude"
+    value="<?= htmlspecialchars($_POST['latitude'] ?? '') ?>"
+>
+
+<input
+    type="hidden"
+    name="longitude"
+    id="longitude"
+    value="<?= htmlspecialchars($_POST['longitude'] ?? '') ?>"
+>
+
+<label>
+    Description *
+</label>
+
+<textarea
+    name="description"
+    placeholder="Describe what happened..."
+    required
+><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
+
+<button
+    type="submit"
+    class="submit-report"
+>
+    SUBMIT EMERGENCY REPORT
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+<div class="call-box">
+
+<div>
+
+    <b>
+        Immediate danger?
+    </b>
+
+    <small>
+        For life-threatening emergencies, call 911.
+    </small>
+
+</div>
+
+<a href="tel:911">
+    ☎ Call 911
+</a>
+
+</div>
 
 </main>
 
 <script>
-async function lookupReportLocation(latitude,longitude){
- const response=await fetch('../api/location.php?lat='+encodeURIComponent(latitude)+'&lon='+encodeURIComponent(longitude),{headers:{'Accept':'application/json'},cache:'no-store'});
- if(!response.ok) throw new Error('Location verification failed');
- const data=await response.json();
- if(!data.inside_service_area) throw new Error(data.message||'Your GPS location is outside the SK LIGTAS service area.');
- return data;
+
+function reverseGeocode(latitude, longitude) {
+
+    const controller =
+        new AbortController();
+
+    const timer =
+        setTimeout(function() {
+            controller.abort();
+        }, 10000);
+
+    const url =
+        '../api/location.php?lat=' +
+        encodeURIComponent(latitude) +
+        '&lon=' +
+        encodeURIComponent(longitude);
+
+    return fetch(
+        url,
+        {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+            cache: 'no-store',
+            signal: controller.signal
+        }
+    )
+    .then(function(response) {
+
+        if (!response.ok) {
+            throw new Error(
+                'Location verification failed.'
+            );
+        }
+
+        return response.json();
+
+    })
+    .finally(function() {
+
+        clearTimeout(timer);
+
+    });
 }
 
-function getLocation(){
- if(!navigator.geolocation){alert('GPS is not supported by this browser.');return;}
- const input=document.getElementById('reportLocation');
- const latitudeInput=document.getElementById('latitude');
- const longitudeInput=document.getElementById('longitude');
- if(input) input.value='Getting your most accurate GPS location...';
- if(latitudeInput) latitudeInput.value='';
- if(longitudeInput) longitudeInput.value='';
+function resetGpsButton() {
 
- let bestPosition=null;
- let watchId=null;
- let finished=false;
- let timer=null;
- let samples=0;
+    const button =
+        document.getElementById('gpsButton');
 
- const finish=async()=>{
-   if(finished) return;
-   finished=true;
-   if(watchId!==null) navigator.geolocation.clearWatch(watchId);
-   if(timer) clearTimeout(timer);
-   if(!bestPosition){
-     if(input) input.value='';
-     alert('Unable to get an accurate GPS location. Please move near a window or outdoors and try again.');
-     return;
-   }
+    if (button) {
 
-   const latitude=bestPosition.coords.latitude;
-   const longitude=bestPosition.coords.longitude;
-   const accuracy=Number(bestPosition.coords.accuracy||0);
-   if(latitudeInput) latitudeInput.value=latitude;
-   if(longitudeInput) longitudeInput.value=longitude;
+        button.disabled = false;
 
-   try{
-     const data=await lookupReportLocation(latitude,longitude);
-     if(input) input.value=data.address+(accuracy>0?' (GPS ±'+Math.round(accuracy)+' m)':'');
-     alert('Exact GPS location found:\n'+data.address+'\nGPS accuracy: ±'+(accuracy>0?Math.round(accuracy)+' m':'unknown'));
-   }catch(error){
-     if(input) input.value='';
-     alert(error.message||'The exact barangay could not be verified.');
-   }
- };
-
- const consider=(position)=>{
-   samples++;
-   const accuracy=Number(position.coords.accuracy||Infinity);
-   const current=bestPosition?Number(bestPosition.coords.accuracy||Infinity):Infinity;
-   if(!bestPosition || accuracy<current) bestPosition=position;
-   if(accuracy<=15 || samples>=5) finish();
- };
-
- watchId=navigator.geolocation.watchPosition(consider,()=>{},{
-   enableHighAccuracy:true,
-   timeout:15000,
-   maximumAge:0
- });
-
- timer=setTimeout(finish,12000);
+        button.textContent =
+            '📍 GPS';
+    }
 }
 
-window.addEventListener('DOMContentLoaded',function(){
- const address=sessionStorage.getItem('sk_ligtas_address');
- const latitude=sessionStorage.getItem('sk_ligtas_latitude');
- const longitude=sessionStorage.getItem('sk_ligtas_longitude');
- if(address||latitude||longitude){
-   const locationInput=document.getElementById('reportLocation');
-   const latitudeInput=document.getElementById('latitude');
-   const longitudeInput=document.getElementById('longitude');
-   if(locationInput) locationInput.value=address||('GPS: '+Number(latitude).toFixed(6)+', '+Number(longitude).toFixed(6));
-   if(latitudeInput) latitudeInput.value=latitude||'';
-   if(longitudeInput) longitudeInput.value=longitude||'';
-   sessionStorage.removeItem('sk_ligtas_address');
-   sessionStorage.removeItem('sk_ligtas_latitude');
-   sessionStorage.removeItem('sk_ligtas_longitude');
-   sessionStorage.removeItem('sk_ligtas_barangay');
- }
-});
+function getLocation() {
+
+    if (!navigator.geolocation) {
+
+        alert(
+            'GPS is not supported by this browser.'
+        );
+
+        return;
+    }
+
+    const input =
+        document.getElementById('reportLocation');
+
+    const latitudeInput =
+        document.getElementById('latitude');
+
+    const longitudeInput =
+        document.getElementById('longitude');
+
+    const gpsButton =
+        document.getElementById('gpsButton');
+
+    const gpsStatus =
+        document.getElementById('gpsStatus');
+
+    if (gpsButton) {
+
+        gpsButton.disabled = true;
+
+        gpsButton.textContent =
+            '📍 Locating...';
+    }
+
+    if (gpsStatus) {
+
+        gpsStatus.textContent =
+            'Getting your current GPS location...';
+    }
+
+    if (input) {
+
+        input.value =
+            'Getting GPS location...';
+    }
+
+    if (latitudeInput) {
+        latitudeInput.value = '';
+    }
+
+    if (longitudeInput) {
+        longitudeInput.value = '';
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                Number(position.coords.latitude);
+
+            const longitude =
+                Number(position.coords.longitude);
+
+            const accuracy =
+                Number(position.coords.accuracy || 0);
+
+            if (latitudeInput) {
+                latitudeInput.value =
+                    latitude;
+            }
+
+            if (longitudeInput) {
+                longitudeInput.value =
+                    longitude;
+            }
+
+            if (input) {
+
+                input.value =
+                    'Finding actual address...';
+            }
+
+            if (gpsStatus) {
+
+                gpsStatus.textContent =
+                    'GPS detected. Finding street and barangay...';
+            }
+
+            reverseGeocode(
+                latitude,
+                longitude
+            )
+            .then(function(data) {
+
+                if (
+                    data.inside_service_area === false ||
+                    (
+                        data.inside === false &&
+                        data.inside_service_area !== true
+                    )
+                ) {
+
+                    throw new Error(
+                        data.message ||
+                        'Your GPS location is outside the SK LIGTAS service area.'
+                    );
+                }
+
+                let address = '';
+
+                if (
+                    data.address &&
+                    String(data.address).trim() !== ''
+                ) {
+
+                    address =
+                        String(data.address).trim();
+
+                } else {
+
+                    const parts = [];
+
+                    let street = '';
+
+                    if (
+                        data.house_number &&
+                        data.road
+                    ) {
+
+                        street =
+                            String(data.house_number).trim() +
+                            ' ' +
+                            String(data.road).trim();
+
+                    } else if (data.road) {
+
+                        street =
+                            String(data.road).trim();
+
+                    } else if (
+                        data.street
+                    ) {
+
+                        street =
+                            String(data.street).trim();
+                    }
+
+                    if (street) {
+                        parts.push(street);
+                    }
+
+                    if (data.barangay) {
+                        parts.push(
+                            String(data.barangay).trim()
+                        );
+                    }
+
+                    parts.push('Santa Cruz');
+                    parts.push('Ilocos Sur');
+
+                    address =
+                        parts
+                            .filter(Boolean)
+                            .join(', ');
+                }
+
+                if (!address) {
+
+                    throw new Error(
+                        'The actual street address could not be determined.'
+                    );
+                }
+
+                if (input) {
+
+                    input.value =
+                        address;
+                }
+
+                if (gpsStatus) {
+
+                    gpsStatus.textContent =
+                        accuracy > 0
+                            ? 'GPS location verified. GPS accuracy: approximately ±' +
+                              Math.round(accuracy) +
+                              ' meters.'
+                            : 'GPS location verified successfully.';
+                }
+
+                resetGpsButton();
+
+            })
+            .catch(function(error) {
+
+                if (input) {
+                    input.value = '';
+                }
+
+                if (gpsStatus) {
+
+                    gpsStatus.textContent =
+                        error.message ||
+                        'Unable to determine your address.';
+                }
+
+                resetGpsButton();
+
+            });
+
+        },
+
+        function(error) {
+
+            let message =
+                'Unable to get your GPS location.';
+
+            if (error.code === 1) {
+
+                message =
+                    'Location permission was denied. Please allow location access.';
+
+            } else if (error.code === 2) {
+
+                message =
+                    'Your location could not be determined.';
+
+            } else if (error.code === 3) {
+
+                message =
+                    'GPS request timed out. Please try again.';
+            }
+
+            const gpsStatus =
+                document.getElementById('gpsStatus');
+
+            if (gpsStatus) {
+                gpsStatus.textContent =
+                    message;
+            }
+
+            resetGpsButton();
+
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
+}
+
+window.addEventListener(
+    'DOMContentLoaded',
+    function() {
+
+        const address =
+            sessionStorage.getItem(
+                'sk_ligtas_address'
+            );
+
+        const latitude =
+            sessionStorage.getItem(
+                'sk_ligtas_latitude'
+            );
+
+        const longitude =
+            sessionStorage.getItem(
+                'sk_ligtas_longitude'
+            );
+
+        if (
+            address ||
+            latitude ||
+            longitude
+        ) {
+
+            const locationInput =
+                document.getElementById(
+                    'reportLocation'
+                );
+
+            const latitudeInput =
+                document.getElementById(
+                    'latitude'
+                );
+
+            const longitudeInput =
+                document.getElementById(
+                    'longitude'
+                );
+
+            if (locationInput && address) {
+
+                locationInput.value =
+                    address;
+            }
+
+            if (latitudeInput) {
+
+                latitudeInput.value =
+                    latitude || '';
+            }
+
+            if (longitudeInput) {
+
+                longitudeInput.value =
+                    longitude || '';
+            }
+
+            sessionStorage.removeItem(
+                'sk_ligtas_address'
+            );
+
+            sessionStorage.removeItem(
+                'sk_ligtas_latitude'
+            );
+
+            sessionStorage.removeItem(
+                'sk_ligtas_longitude'
+            );
+
+            sessionStorage.removeItem(
+                'sk_ligtas_barangay'
+            );
+        }
+    }
+);
+
 </script>
 
 </body>
-
 </html>

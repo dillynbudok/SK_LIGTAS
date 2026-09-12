@@ -1,3 +1,4 @@
+```css
 * {
     margin: 0;
     padding: 0;
@@ -14,10 +15,6 @@ body {
     color: #172033;
     line-height: 1.5;
 }
-
-/* =========================
-   HEADER / NAVIGATION
-========================= */
 
 header {
     background: #063b91 !important;
@@ -73,20 +70,12 @@ nav a:hover {
     background: rgba(255,255,255,.16);
 }
 
-/* =========================
-   MAIN
-========================= */
-
 main {
     width: 100%;
     max-width: 1280px;
     margin: auto;
     padding: 22px;
 }
-
-/* =========================
-   SECTION HEADINGS
-========================= */
 
 main h1,
 main h2,
@@ -108,10 +97,6 @@ main h3 {
 main section {
     margin-bottom: 25px;
 }
-
-/* =========================
-   HERO
-========================= */
 
 .hero,
 .banner,
@@ -147,10 +132,6 @@ main section {
     font-size: 17px;
 }
 
-/* =========================
-   BIG EMERGENCY BUTTON
-========================= */
-
 .emergency-button,
 .call-911,
 button.emergency {
@@ -172,10 +153,6 @@ button.emergency:hover {
     background: #b90000 !important;
     transform: translateY(-2px);
 }
-
-/* =========================
-   QUICK ACTIONS
-========================= */
 
 .quick-actions,
 .quick-grid,
@@ -227,10 +204,6 @@ button.emergency:hover {
     box-shadow: 0 7px 18px rgba(0,0,0,.1);
 }
 
-/* =========================
-   CONTENT GRID
-========================= */
-
 .dashboard,
 .dashboard-grid,
 .content-grid,
@@ -251,10 +224,6 @@ button.emergency:hover {
     box-shadow: 0 3px 12px rgba(0,0,0,.06);
 }
 
-/* =========================
-   CARDS
-========================= */
-
 .card {
     background: white;
     border: 1px solid #dbe3ee;
@@ -272,10 +241,6 @@ button.emergency:hover {
 .card p {
     color: #606b7b;
 }
-
-/* =========================
-   HOTLINES
-========================= */
 
 .hotlines,
 .emergency-hotlines,
@@ -317,10 +282,6 @@ button.emergency:hover {
     font-weight: 800;
 }
 
-/* =========================
-   ALERTS
-========================= */
-
 .alert,
 .disaster-alert,
 .alert-item {
@@ -342,10 +303,6 @@ button.emergency:hover {
 .alert-item p {
     color: #555;
 }
-
-/* =========================
-   HOSPITALS
-========================= */
 
 .hospitals,
 .nearest-hospitals,
@@ -378,10 +335,6 @@ button.emergency:hover {
     font-size: 14px;
 }
 
-/* =========================
-   EVACUATION CENTERS
-========================= */
-
 .evacuation,
 .evacuation-centers,
 .evacuation-list {
@@ -412,10 +365,6 @@ button.emergency:hover {
     font-weight: bold;
 }
 
-/* =========================
-   WHAT DO I CALL
-========================= */
-
 .call-options,
 .what-do-i-call,
 .emergency-options {
@@ -445,10 +394,6 @@ button.emergency:hover {
     box-shadow: 0 5px 14px rgba(0,0,0,.12);
 }
 
-/* =========================
-   FIRST AID
-========================= */
-
 .first-aid,
 .first-aid-guide {
     background: white;
@@ -469,10 +414,6 @@ button.emergency:hover {
     border-bottom: none;
 }
 
-/* =========================
-   REPORT SECTION
-========================= */
-
 .report,
 .report-section,
 .report-box {
@@ -491,10 +432,6 @@ button.emergency:hover {
     border-bottom: none;
     margin-top: 0;
 }
-
-/* =========================
-   FORM
-========================= */
 
 form {
     width: 100%;
@@ -561,10 +498,6 @@ input[type="submit"]:hover {
     background: #043d89;
 }
 
-/* =========================
-   LOCATION BUTTON
-========================= */
-
 .location-button,
 .gps-button,
 button[id*="gps"],
@@ -573,10 +506,6 @@ button[id*="GPS"] {
     color: white;
     padding: 10px 15px;
 }
-
-/* =========================
-   FOOTER
-========================= */
 
 footer {
     background: #062b65 !important;
@@ -590,10 +519,6 @@ footer p,
 footer a {
     color: white !important;
 }
-
-/* =========================
-   MODAL
-========================= */
 
 .modal {
     position: fixed;
@@ -621,10 +546,6 @@ footer a {
     padding: 25px;
     box-shadow: 0 15px 50px rgba(0,0,0,.3);
 }
-
-/* =========================
-   MOBILE
-========================= */
 
 @media (max-width: 1000px) {
 
@@ -720,7 +641,72 @@ footer a {
 
 @media (max-width: 420px) {
 
-    .call-options,
+    .call-options,*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,Arial,sans-serif;background:#f4f7fb;color:#152238}a{text-decoration:none;color:inherit}.header{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #e5e9ef;min-height:74px;padding:12px 4%;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:12px}.brand>div:last-child{display:flex;flex-direction:column}.brand strong{font-size:19px;color:#073b8f}.brand span{font-size:11px;color:#657185}.brand small{font-size:10px;color:#8993a3;margin-top:3px}.shield{width:45px;height:45px;border-radius:13px;background:#fff;display:grid!important;place-items:center;overflow:hidden;padding:3px}.shield img{width:100%;height:100%;object-fit:contain;display:block}.header nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}.header nav a{padding:9px 10px;border-radius:9px;color:#556174;font-size:12px}.header nav a:hover{background:#eaf2ff;color:#0754c7}.location-button{border:0;border-radius:10px;background:#0754c7;color:#fff;padding:10px 14px;font-weight:700;cursor:pointer}.hero{width:min(1200px,92%);margin:28px auto 0;background:linear-gradient(135deg,#0754c7,#063887);border-radius:25px;padding:50px;display:flex;align-items:center;justify-content:space-between;color:#fff;gap:30px}.hero h1{font-size:clamp(32px,5vw,58px);line-height:1.03;margin:0}.hero h1 span{color:#bfe0ff}.hero p{opacity:.88}.emergency{border:0;background:#ed2638;color:#fff;border-radius:18px;padding:22px 28px;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 12px 28px #001b5540}.notice{width:min(1200px,92%);margin:14px auto;background:#eaf2ff;color:#0754c7;border-radius:12px;padding:11px;text-align:center;font-size:12px}.quick-actions{width:min(1200px,92%);margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:15px 0}.quick-actions button,.quick-link{border:1px solid #e1e7ef;background:#fff;border-radius:17px;min-height:120px;padding:16px 10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 16px #18385c0b;cursor:pointer}.quick-actions button:hover,.quick-link:hover{transform:translateY(-2px);box-shadow:0 8px 20px #18385c14}.quick-actions span{font-size:26px}.quick-actions strong{font-size:13px}.quick-actions small{font-size:10px;color:#788395}.content-grid{width:min(1200px,92%);margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:#fff;border:1px solid #e1e7ef;border-radius:18px;overflow:hidden;box-shadow:0 4px 16px #18385c09}.card.full{grid-column:1/-1}.card-header{padding:17px 19px;border-bottom:1px solid #edf0f4;display:flex;align-items:center;justify-content:space-between}.card-header h2{margin:0;font-size:17px}.card-header span{font-size:10px;color:#7c8798}.report-banner{width:min(1200px,92%);margin:18px auto;background:#fff;border:1px solid #e1e7ef;border-radius:18px;padding:22px;display:flex;align-items:center;justify-content:space-between;gap:20px}.report-banner strong{font-size:16px}.report-banner p{margin:6px 0 0;color:#718096;font-size:12px}.submit-report{display:inline-block;background:#ed2638;color:#fff;padding:12px 18px;border-radius:11px;font-weight:800;font-size:12px;border:0}.contact-row,.hospital-row,.evac-row,.aid-row{padding:14px 18px;border-bottom:1px solid #edf0f4;display:flex;align-items:center;justify-content:space-between;gap:15px}.contact-row:last-child,.hospital-row:last-child,.evac-row:last-child,.aid-row:last-child{border-bottom:0}.row-main{display:flex;align-items:center;gap:12px}.row-icon{width:42px;height:42px;border-radius:12px;background:#eaf2ff;color:#0754c7;display:grid;place-items:center;font-size:19px}.row-main b{display:block;font-size:13px}.row-main small{display:block;color:#778295;font-size:10px;margin-top:3px}.call-btn{width:37px;height:37px;border-radius:50%;background:#0754c7;color:#fff;display:grid;place-items:center}.alert{padding:15px 18px;border-bottom:1px solid #edf0f4}.alert:last-child{border:0}.alert b{font-size:13px}.alert p{margin:5px 0;color:#667286;font-size:11px;line-height:1.5}.alert small{font-size:9px;color:#9aa2ae}.alert.danger{border-left:4px solid #ed2638}.alert.warning{border-left:4px solid #f39a19}.alert.info{border-left:4px solid #0754c7}.emergency-types{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px}.emergency-types button,.emergency-type-link{border:1px solid #e4e9ef;background:#f9fafc;border-radius:13px;padding:15px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}.emergency-types button{cursor:pointer}.emergency-types strong,.emergency-type-link strong{font-size:12px}.emergency-types small,.emergency-type-link small{font-size:9px;color:#7b8696}.page-shell{width:min(760px,92%);margin:30px auto}.page-card{background:#fff;border:1px solid #e0e6ee;border-radius:20px;padding:28px;box-shadow:0 5px 20px #18385c0a}.page-card h1{margin:8px 0;font-size:28px}.page-card>p{color:#748093;font-size:13px}.page-icon{width:70px;height:70px;border-radius:20px;background:#ffe7e9;display:grid;place-items:center;font-size:32px}.page-card form{display:grid;gap:8px;margin-top:20px}.page-card label{font-size:12px;font-weight:800;margin-top:7px}.page-card input,.page-card select,.page-card textarea{width:100%;padding:12px;border:1px solid #d7dee8;border-radius:11px;font:inherit;outline:0}.page-card textarea{resize:vertical}.location-row{display:flex;gap:8px}.location-row input{flex:1}.location-row button{border:0;background:#eaf2ff;color:#0754c7;border-radius:11px;padding:0 14px;font-weight:800}.success-box,.error-box{padding:12px;border-radius:11px;margin-top:15px;font-size:12px}.success-box{background:#e4f8ec;color:#18763d}.error-box{background:#ffe7e9;color:#b51c2c}.call-box{margin-top:14px;background:#fff0f1;border:1px solid #ffd8dc;border-radius:15px;padding:15px;display:flex;justify-content:space-between;align-items:center}.call-box span{display:flex;flex-direction:column;gap:4px}.call-box small{color:#7b8493;font-size:10px}.call-box a{background:#ed2638;color:#fff;padding:10px 14px;border-radius:10px;font-size:11px;font-weight:800}.section-title{margin-bottom:15px}.section-title h1{margin:0;font-size:28px}.section-title p{color:#7b8493;font-size:12px}.list-card{background:#fff;border:1px solid #e1e7ef;border-radius:18px;overflow:hidden}.list-row{display:flex;justify-content:space-between;align-items:center;padding:15px 17px;border-bottom:1px solid #edf0f4;gap:12px}.list-row:last-child{border:0}.list-row b{font-size:13px}.list-row small{display:block;color:#778295;font-size:10px;margin-top:4px}.status{padding:5px 9px;border-radius:20px;background:#dcf8e6;color:#18743c;font-size:9px;font-weight:800}.status.full{background:#fff0d5;color:#a76700}.status.closed{background:#ffe5e8;color:#b91e2d}.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:13px}.tile{background:#fff;border:1px solid #e1e7ef;border-radius:17px;padding:18px;display:flex;flex-direction:column;gap:7px}.tile-icon{font-size:27px}.tile b{font-size:14px}.tile small,.tile p{color:#778295;font-size:11px;line-height:1.5}.tile>a{background:#0754c7;color:#fff;text-align:center;padding:9px;border-radius:9px;font-size:11px;margin-top:4px}.back-link{color:#0754c7;font-size:22px;margin-right:2px}footer{width:min(1200px,92%);margin:30px auto;padding:25px 0;color:#788395;display:flex;flex-direction:column;gap:4px;font-size:11px}@media(max-width:950px){.header nav{display:none}.hero{padding:35px}.quick-actions{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:1fr}.card.full{grid-column:auto}}@media(max-width:600px){body{padding-bottom:20px}.header{padding:10px 14px}.location-button{display:none}.hero{width:100%;margin:0;border-radius:0 0 24px 24px;padding:30px 18px;flex-direction:column;align-items:flex-start}.hero h1{font-size:38px}.emergency{width:100%;padding:16px}.notice{width:calc(100% - 20px)}.quick-actions{width:calc(100% - 20px);grid-template-columns:repeat(2,1fr);gap:9px}.quick-actions button,.quick-link{min-height:105px}.content-grid,.report-banner{width:calc(100% - 20px)}.report-banner{flex-direction:column;align-items:flex-start}.report-banner .submit-report{width:100%;text-align:center}.emergency-types{grid-template-columns:repeat(2,1fr)}.page-shell{width:calc(100% - 20px);margin:18px auto}.page-card{padding:19px}.page-card h1{font-size:23px}.tiles{grid-template-columns:1fr}.call-box{align-items:flex-start;flex-direction:column;gap:10px}.call-box a{width:100%;text-align:center}}
+
+.contact-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 9px;
+    border: 1px solid #edf0f4;
+    padding: 4px;
+}
+
+.aid-row {
+    background: #fff;
+    border: 1px solid #e1e7ef;
+    border-radius: 12px;
+    margin-bottom: 9px;
+    overflow: hidden;
+}
+
+.aid-row summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
+}
+
+.aid-row summary::-webkit-details-marker {
+    display: none;
+}
+
+.aid-row[open] .aid-arrow {
+    transform: rotate(180deg);
+}
+
+.aid-arrow {
+    font-size: 22px;
+    color: #0754c7;
+    transition: transform .2s ease;
+}
+
+.aid-content {
+    padding: 0 14px 16px 70px;
+    color: #4f5b6b;
+    line-height: 1.6;
+    font-size: 14px;
+}
+.contact-logo{width:46px;height:46px;object-fit:contain;background:#fff;border:1px solid #e3e8ef;border-radius:12px;padding:4px;flex:0 0 46px}.contact-row .row-main{align-items:center}.aid-row{background:#fff;border:1px solid #e2e7ee;border-radius:12px;margin-bottom:8px;overflow:hidden}.aid-row summary{list-style:none;cursor:pointer;padding:12px;display:flex;justify-content:space-between;align-items:center}.aid-row summary::-webkit-details-marker{display:none}.aid-content{padding:0 14px 14px 66px;color:#4b586b;font-size:12px;line-height:1.6}.aid-arrow{transition:transform .2s}.aid-row[open] .aid-arrow{transform:rotate(180deg)}
+
+:root{--pdf-navy:#062b69;--pdf-red:#ed1c24;--pdf-yellow:#f4c21f}
+body{background-color:#f7f8fa;background-image:linear-gradient(rgba(6,43,105,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(6,43,105,.025) 1px,transparent 1px);background-size:22px 22px}
+.header{border-bottom-color:#d8dee8}
+.header nav a:hover{background:#edf3ff;color:var(--pdf-navy)}
+.location-button{background:var(--pdf-navy)}
+.hero{background:linear-gradient(135deg,var(--pdf-navy),#0b4fae 62%,var(--pdf-navy));}
+.emergency,.submit-report{background:var(--pdf-red)}
+.notice{background:#edf3ff;color:var(--pdf-navy)}
+.row-icon{background:#edf3ff;color:var(--pdf-navy)}
+.call-btn{background:var(--pdf-navy)}
+.alert.danger{border-left-color:var(--pdf-red)}
+.alert.warning{border-left-color:var(--pdf-yellow)}
+.alert.info{border-left-color:var(--pdf-navy)}
+
     .what-do-i-call,
     .emergency-options {
         grid-template-columns: 1fr;
@@ -732,3 +718,4 @@ footer a {
         font-size: 30px;
     }
 }
+```
